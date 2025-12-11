@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { Footer } from '@/components/Footer';
-import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 
 // Contact form validation schema
@@ -47,23 +46,29 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      const { data, error } = await supabase.functions.invoke("submit-call-request", {
-        body: { 
-          firstName: validData.firstName,
-          lastName: validData.lastName,
-          email: validData.email.toLowerCase(),
-          phone: validData.phone 
+      // Use direct fetch for more reliable CORS handling
+      const response = await fetch(
+        'https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+          },
+          body: JSON.stringify({
+            firstName: validData.firstName,
+            lastName: validData.lastName,
+            email: validData.email.toLowerCase(),
+            phone: validData.phone,
+          }),
         }
-      });
+      );
 
-      if (error) {
-        console.error('Function error:', error);
-        toast.error('Failed to submit. Please try again.');
-        return;
-      }
+      const data = await response.json();
 
-      if (data?.error) {
-        toast.error(data.error);
+      if (!response.ok || data?.error) {
+        console.error('Submit error:', data);
+        toast.error(data?.error || 'Failed to submit. Please try again.');
         return;
       }
 

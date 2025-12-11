@@ -47,25 +47,25 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      // Use edge function which bypasses RLS with service role key
-      const { data, error } = await supabase.functions.invoke('submit-call-request', {
-        body: {
+      // Use direct fetch to edge function which bypasses RLS with service role key
+      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        },
+        }),
       });
 
-      if (error) {
-        console.error('Submission error:', error);
-        toast.error('Failed to submit. Please try again.');
-        return;
-      }
-      
-      if (data?.error) {
-        console.error('Server error:', data.error);
-        toast.error(data.error);
+      const data = await response.json();
+
+      if (!response.ok || data.error) {
+        console.error('Submission error:', data.error || response.statusText);
+        toast.error(data.error || 'Failed to submit. Please try again.');
         return;
       }
 

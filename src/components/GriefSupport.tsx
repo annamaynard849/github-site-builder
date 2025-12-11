@@ -52,9 +52,9 @@ export const GriefSupport = () => {
 
       try {
         const { data: existingAnswers, error } = await supabase
-          .from('grief_support_answers')
+          .from('grief_support_answers' as any)
           .select('question_key, answer')
-          .eq('user_id', user.id);
+          .eq('user_id', user.id) as any;
 
         if (error) {
           console.error('Error loading answers:', error);
@@ -132,12 +132,12 @@ export const GriefSupport = () => {
 
     try {
       const { error } = await supabase
-        .from('grief_support_answers')
+        .from('grief_support_answers' as any)
         .upsert({
           user_id: user.id,
           question_key: questionId.toString(),
           answer: answer
-        });
+        } as any);
 
       if (error) {
         console.error('Error saving answer:', error);
@@ -196,7 +196,7 @@ export const GriefSupport = () => {
     // Clear answers from database
     try {
       const { error } = await supabase
-        .from('grief_support_answers')
+        .from('grief_support_answers' as any)
         .delete()
         .eq('user_id', user.id);
 

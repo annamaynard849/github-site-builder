@@ -70,8 +70,8 @@ export const AvatarUpload = ({
 
       // Update profile with new avatar URL
       const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .from('profiles' as any)
+        .update({ avatar_url: publicUrl } as any)
         .eq('user_id', user.id);
 
       if (profileError) {

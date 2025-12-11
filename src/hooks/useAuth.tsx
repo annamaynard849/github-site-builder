@@ -47,22 +47,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.email);
-        
-        // Validate session security
-        if (session && !(await AuthSecurity.validateSession(session))) {
-          // Session is invalid/expired, sign out
-          await supabase.auth.signOut();
-          setSession(null);
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-        
+      (event, session) => {
+        // Update state synchronously first
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Defer async session validation to avoid Supabase client deadlock
+        if (session) {
+          setTimeout(async () => {
+            const isValid = await AuthSecurity.validateSession(session);
+            if (!isValid) {
+              await supabase.auth.signOut();
+              setSession(null);
+              setUser(null);
+            }
+          }, 0);
+        }
       }
     );
 

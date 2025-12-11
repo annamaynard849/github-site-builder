@@ -33,26 +33,35 @@ export const PublicLandingPage = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await supabase.functions.invoke('submit-call-request', {
-        body: {
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
+      // Use direct fetch to Supabase REST API
+      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/rest/v1/call_requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          first_name: formData.firstName.trim(),
+          last_name: formData.lastName.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
-        },
+        }),
       });
 
-      if (response.error) {
-        console.error('Edge function error:', response.error);
-        toast.error(response.error.message || 'Failed to submit. Please try again.');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API error:', errorData);
+        toast.error(errorData.message || 'Failed to submit. Please try again.');
         return;
       }
 
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Unexpected error:', error);
-      toast.error(error?.message || 'Something went wrong. Please try again.');
+      console.error('Network error:', error);
+      toast.error('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

@@ -1,21 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Honorly - Preserve What Matters, Plan With Peace</title>
-    <meta name="description" content="Create meaningful memorials, organize important documents, and ensure your loved ones are cared for. Honorly helps you honor life's precious moments." />
+    
+    <!-- Domain redirect: .io → .com (HTTPS 301-equivalent) -->
+    <script>
+      (function() {
+        var host = window.location.hostname.toLowerCase();
+        if (host === 'honorly.io' || host === 'www.honorly.io') {
+          var newUrl = 'https://honorly.com' + window.location.pathname + window.location.search + window.location.hash;
+          window.location.replace(newUrl);
+        }
+      })();
+    </script>
+    
+    <!-- Enhanced Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://gfdxwckcfieyxipsvazl.supabase.co https://www.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" />
+    <link rel="icon" href="/honorly-social-logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Honorly - Navigate grief with support</title>
+    <meta name="description" content="Grief is overwhelming. The logistics shouldn't be. From memorials to paperwork, finances, and emotional support — we help you navigate everything that comes next." />
     <meta name="author" content="Honorly" />
-    <meta name="keywords" content="memorial, tribute, end of life planning, family memories, legacy planning, document organization" />
 
-    <meta property="og:title" content="Honorly - Preserve What Matters, Plan With Peace" />
-    <meta property="og:description" content="Create meaningful memorials, organize important documents, and ensure your loved ones are cared for." />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R54Y58T3MJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-R54Y58T3MJ');
+    </script>
+
+    <!-- Open Graph / Social Media Tags -->
+    <meta property="og:title" content="Honorly" />
+    <meta property="og:description" content="Navigate grief with support at every step" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
+    <meta property="og:site_name" content="Honorly" />
+    <meta property="og:image" content="/honorly-social-logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    
+    <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Honorly" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="Honorly" />
+    <meta name="twitter:description" content="Navigate grief with support at every step" />
+    <meta name="twitter:image" content="/honorly-social-logo.png" />
   </head>
 
   <body>

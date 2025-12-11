@@ -1,0 +1,13 @@
+project_id = "gfdxwckcfieyxipsvazl"
+
+[functions.log-security-event]
+verify_jwt = false
+
+[functions.send-support-invitation]
+verify_jwt = true
+
+[functions.send-waitlist-confirmation]
+verify_jwt = false
+
+[functions.validate-passcode]
+verify_jwt = false

@@ -1,0 +1,1 @@
+UPDATE memorial_pages SET is_public = false WHERE slug IN ('anna-maynard', 'anna-maynard-1');

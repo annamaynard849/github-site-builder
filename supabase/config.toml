@@ -1,4 +1,4 @@
-project_id = "gfdxwckcfieyxipsvazl"
+project_id = "kpspzoooanlfpiuusian"
 
 [functions.log-security-event]
 verify_jwt = false
@@ -7,6 +7,9 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.send-waitlist-confirmation]
+verify_jwt = false
+
+[functions.submit-call-request]
 verify_jwt = false
 
 [functions.validate-passcode]

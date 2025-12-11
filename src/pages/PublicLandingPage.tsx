@@ -47,29 +47,26 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-        },
-        body: JSON.stringify({
+      // Use supabase.functions.invoke - it handles CORS internally
+      const { data, error } = await supabase.functions.invoke('submit-call-request', {
+        body: {
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        }),
+        },
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Response not ok:', response.status, errorText);
-        toast.error('Failed to submit. Please try again.');
+      if (error) {
+        console.error('Function invoke error:', error);
+        // Check if it's a network/CORS error
+        if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+          toast.error('Connection issue. Please try again in a moment.');
+        } else {
+          toast.error('Failed to submit. Please try again.');
+        }
         return;
       }
-
-      const data = await response.json();
 
       if (data?.error) {
         console.error('Server error:', data.error);
@@ -80,8 +77,8 @@ export const PublicLandingPage = () => {
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Fetch error:', error);
-      toast.error('Network error. Please check your connection and try again.');
+      console.error('Caught error:', error);
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

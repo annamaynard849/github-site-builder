@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { Footer } from '@/components/Footer';
+import { supabase } from '@/integrations/supabase/client';
 
 export const PublicLandingPage = () => {
   const [formData, setFormData] = useState({
@@ -30,10 +31,27 @@ export const PublicLandingPage = () => {
     }
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success('Thank you! A member of our team will be in touch shortly.');
-    setFormData({ firstName: '', lastName: '', email: '', phone: '' });
-    setIsSubmitting(false);
+    
+    try {
+      const { error } = await supabase
+        .from('call_requests')
+        .insert({
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+        });
+
+      if (error) throw error;
+
+      toast.success("We'll be in touch within 24 hours.");
+      setFormData({ firstName: '', lastName: '', email: '', phone: '' });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const scrollToForm = () => {

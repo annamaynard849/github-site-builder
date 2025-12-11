@@ -34,20 +34,19 @@ export const PublicLandingPage = () => {
     
     try {
       console.log('Submitting call request to Supabase...');
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('call_requests')
         .insert({
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-        })
-        .select();
+        });
 
-      console.log('Supabase response:', { data, error });
+      console.log('Supabase insert completed, error:', error);
 
       if (error) {
-        console.error('Supabase error details:', error);
+        console.error('Supabase error details:', JSON.stringify(error));
         throw error;
       }
 
@@ -55,8 +54,6 @@ export const PublicLandingPage = () => {
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
       console.error('Error submitting form:', error);
-      console.error('Error message:', error?.message);
-      console.error('Error code:', error?.code);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);

@@ -25,6 +25,7 @@ export const PublicLandingPage = () => {
     phone: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,7 +70,7 @@ export const PublicLandingPage = () => {
         return;
       }
 
-      toast.success("We'll be in touch within 24 hours.");
+      setIsSubmitted(true);
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
       console.error('Unexpected error:', error);
@@ -291,82 +292,103 @@ export const PublicLandingPage = () => {
               </div>
             </div>
 
-            {/* Right - Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            {/* Right - Form or Success Message */}
+            {isSubmitted ? (
+              <div className="flex flex-col items-center justify-center text-center space-y-6 py-12 bg-card rounded-2xl border border-border p-8">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Check className="w-8 h-8 text-primary" />
+                </div>
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-foreground text-sm">
-                    First Name <span className="text-primary">*</span>
+                  <h3 className="text-2xl font-playfair text-foreground">Thank you!</h3>
+                  <p className="text-muted-foreground">
+                    We'll be in touch within 24 hours.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsSubmitted(false)}
+                  className="rounded-full"
+                >
+                  Submit another request
+                </Button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-foreground text-sm">
+                      First Name <span className="text-primary">*</span>
+                    </Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className="bg-card border-border h-12 rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-foreground text-sm">
+                      Last Name <span className="text-primary">*</span>
+                    </Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className="bg-card border-border h-12 rounded-lg"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground text-sm">
+                    Email <span className="text-primary">*</span>
                   </Label>
                   <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    value={formData.firstName}
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className="bg-card border-border h-12 rounded-lg"
                     required
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-foreground text-sm">
-                    Last Name <span className="text-primary">*</span>
+                  <Label htmlFor="phone" className="text-foreground text-sm">
+                    Phone Number <span className="text-primary">*</span>
                   </Label>
                   <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    value={formData.lastName}
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
                     onChange={handleInputChange}
                     className="bg-card border-border h-12 rounded-lg"
+                    placeholder="+1 (555) 123-4567"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground text-sm">
-                  Email <span className="text-primary">*</span>
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="bg-card border-border h-12 rounded-lg"
-                  required
-                />
-              </div>
+                <Button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-medium rounded-full"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Request a Call'}
+                </Button>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-foreground text-sm">
-                  Phone Number <span className="text-primary">*</span>
-                </Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="bg-card border-border h-12 rounded-lg"
-                  placeholder="+1 (555) 123-4567"
-                  required
-                />
-              </div>
-
-              <Button 
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-medium rounded-full"
-              >
-                {isSubmitting ? 'Submitting...' : 'Request a Call'}
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center">
-                By submitting, you agree to be contacted by Honorly. You can opt out anytime.
-              </p>
-            </form>
+                <p className="text-xs text-muted-foreground text-center">
+                  By submitting, you agree to be contacted by Honorly. You can opt out anytime.
+                </p>
+              </form>
+            )}
           </div>
         </div>
       </section>

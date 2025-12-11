@@ -33,28 +33,29 @@ export const PublicLandingPage = () => {
     setIsSubmitting(true);
     
     try {
-      console.log('Submitting call request to Supabase...');
-      const { error } = await supabase
+      const insertData = {
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+      };
+      
+      const { data, error } = await supabase
         .from('call_requests')
-        .insert({
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-        });
-
-      console.log('Supabase insert completed, error:', error);
+        .insert(insertData)
+        .select();
 
       if (error) {
-        console.error('Supabase error details:', JSON.stringify(error));
-        throw error;
+        console.error('Supabase error:', error.message, error.code, error.details);
+        toast.error(error.message || 'Failed to submit. Please try again.');
+        return;
       }
 
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Error submitting form:', error);
-      toast.error('Something went wrong. Please try again.');
+      console.error('Unexpected error:', error);
+      toast.error(error?.message || 'Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

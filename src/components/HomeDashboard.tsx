@@ -50,10 +50,10 @@ export function HomeDashboard() {
 
       // Check if user owns any loved ones
       const { data: ownedLovedOnes, error: ownedError } = await supabase
-        .from('loved_ones')
+        .from('loved_ones' as any)
         .select('id')
         .eq('admin_user_id', user.id)
-        .limit(1);
+        .limit(1) as any;
 
       console.log('HomeDashboard: Owned loved ones:', ownedLovedOnes);
 
@@ -63,10 +63,10 @@ export function HomeDashboard() {
 
       // Check if user has support access to any loved ones
       const { data: supportAccess, error: supportError } = await supabase
-        .from('loved_one_access')
+        .from('loved_one_access' as any)
         .select('loved_one_id')
         .eq('user_id', user.id)
-        .limit(1);
+        .limit(1) as any;
 
       console.log('HomeDashboard: Support access:', supportAccess);
 
@@ -88,9 +88,9 @@ export function HomeDashboard() {
 
         // Check support access cases
         const { data: supportCases } = await supabase
-          .from('loved_one_access')
+          .from('loved_one_access' as any)
           .select('loved_one_id')
-          .eq('user_id', user.id);
+          .eq('user_id', user.id) as any;
 
         const totalCases = (ownedCases?.length || 0) + (supportCases?.length || 0);
 
@@ -111,10 +111,10 @@ export function HomeDashboard() {
 
       // Otherwise fetch profile for welcome screen
       const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
+        .from('profiles' as any)
         .select('first_name, last_name')
         .eq('user_id', user.id)
-        .maybeSingle();
+        .maybeSingle() as any;
 
       if (profileError) {
         console.error('HomeDashboard: Profile error:', profileError);

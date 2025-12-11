@@ -176,8 +176,8 @@ export default function CaseSwitcher() {
 
       if (supportError) throw supportError;
 
-      const ownedCases = (ownedCasesData as CaseWithLovedOne[]) || [];
-      const supportAccess = (supportData as SupportAccessItem[]) || [];
+      const ownedCases = (ownedCasesData || []) as unknown as CaseWithLovedOne[];
+      const supportAccess = (supportData || []) as unknown as SupportAccessItem[];
 
       // Fetch names of people who invited support members
       const inviterIds = supportAccess.map(s => s.granted_by).filter(Boolean);

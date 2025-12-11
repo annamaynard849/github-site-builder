@@ -69,7 +69,7 @@ export default function InlineCustomTaskForm({
       });
 
       analytics.event("task_custom_created", {
-        task_id: inserted.id,
+        task_id: inserted?.id,
         profile_id: lovedOneId,
         creator_id: user.id,
         category: values.category,

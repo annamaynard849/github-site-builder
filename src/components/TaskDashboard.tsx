@@ -96,7 +96,7 @@ export function TaskDashboard({ lovedOneId, userRole }: TaskDashboardProps) {
       }
 
       setSupportMembers(membersMap);
-      setTasks(tasksData || []);
+      setTasks((tasksData || []) as unknown as Task[]);
     } catch (error) {
       console.error('Error fetching tasks:', error);
       toast.error('Failed to load tasks');

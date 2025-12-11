@@ -47,38 +47,52 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      // Use supabase.functions.invoke - it handles CORS internally
-      const { data, error } = await supabase.functions.invoke('submit-call-request', {
-        body: {
+      // Create a promise-based XMLHttpRequest for better CORS handling
+      const submitData = await new Promise<{success: boolean; error?: string}>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA');
+        
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch {
+              resolve({ success: true });
+            }
+          } else {
+            try {
+              const errorData = JSON.parse(xhr.responseText);
+              resolve({ success: false, error: errorData.error || 'Submission failed' });
+            } catch {
+              resolve({ success: false, error: 'Submission failed' });
+            }
+          }
+        };
+        
+        xhr.onerror = () => {
+          reject(new Error('Network error'));
+        };
+        
+        xhr.send(JSON.stringify({
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        },
+        }));
       });
 
-      if (error) {
-        console.error('Function invoke error:', error);
-        // Check if it's a network/CORS error
-        if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-          toast.error('Connection issue. Please try again in a moment.');
-        } else {
-          toast.error('Failed to submit. Please try again.');
-        }
-        return;
-      }
-
-      if (data?.error) {
-        console.error('Server error:', data.error);
-        toast.error(data.error);
+      if (!submitData.success || submitData.error) {
+        toast.error(submitData.error || 'Failed to submit. Please try again.');
         return;
       }
 
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Caught error:', error);
-      toast.error('Something went wrong. Please try again.');
+      console.error('Submit error:', error);
+      toast.error('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

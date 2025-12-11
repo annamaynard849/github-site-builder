@@ -33,21 +33,18 @@ export const PublicLandingPage = () => {
     setIsSubmitting(true);
     
     try {
-      const insertData = {
-        first_name: formData.firstName.trim(),
-        last_name: formData.lastName.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-      };
-      
-      const { data, error } = await supabase
-        .from('call_requests')
-        .insert(insertData)
-        .select();
+      const response = await supabase.functions.invoke('submit-call-request', {
+        body: {
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+        },
+      });
 
-      if (error) {
-        console.error('Supabase error:', error.message, error.code, error.details);
-        toast.error(error.message || 'Failed to submit. Please try again.');
+      if (response.error) {
+        console.error('Edge function error:', response.error);
+        toast.error(response.error.message || 'Failed to submit. Please try again.');
         return;
       }
 

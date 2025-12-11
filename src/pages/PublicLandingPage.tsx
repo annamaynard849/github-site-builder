@@ -46,25 +46,30 @@ export const PublicLandingPage = () => {
     
     try {
       const validData = validation.data;
-      console.log('Submitting form data:', validData);
       
-      // Use supabase.functions.invoke which handles CORS properly
-      const { data, error } = await supabase.functions.invoke('submit-call-request', {
-        body: {
+      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+        },
+        body: JSON.stringify({
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        },
+        }),
       });
 
-      console.log('Response:', { data, error });
-
-      if (error) {
-        console.error('Invoke error:', error);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response not ok:', response.status, errorText);
         toast.error('Failed to submit. Please try again.');
         return;
       }
+
+      const data = await response.json();
 
       if (data?.error) {
         console.error('Server error:', data.error);
@@ -75,7 +80,7 @@ export const PublicLandingPage = () => {
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Caught error:', error?.message, error);
+      console.error('Fetch error:', error);
       toast.error('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);

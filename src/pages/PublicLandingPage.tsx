@@ -47,23 +47,31 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      const { data, error } = await supabase.functions.invoke('submit-call-request', {
-        body: {
+      const url = 'https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request';
+      
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
+        },
+        body: JSON.stringify({
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        },
+        }),
       });
 
-      // Check for FunctionsHttpError, FunctionsRelayError, or FunctionsFetchError
-      if (error) {
-        console.error('Function invoke error:', error.name, error.message);
-        toast.error('Failed to submit. Please try again.');
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Form submit error:', res.status, errorText);
+        toast.error(`Submission failed (${res.status}): ${errorText}`);
         return;
       }
 
-      // Check for application-level error in response
+      const data = await res.json();
+      
       if (data?.error) {
         console.error('Application error:', data.error);
         toast.error(data.error);
@@ -73,8 +81,10 @@ export const PublicLandingPage = () => {
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Unexpected error:', error?.message || error);
-      toast.error('Something went wrong. Please try again.');
+      // Show the actual error message in the toast so we can debug
+      const errorMsg = error?.message || String(error);
+      console.error('Fetch error:', errorMsg);
+      toast.error(`Network error: ${errorMsg}`);
     } finally {
       setIsSubmitting(false);
     }

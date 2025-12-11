@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -46,7 +45,7 @@ function sanitize(input: string): string {
   return input.replace(/[<>]/g, '').trim();
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { 
@@ -79,8 +78,11 @@ serve(async (req: Request) => {
 
     const { firstName, lastName, email, phone } = await req.json();
 
+    console.log("Received form submission:", { firstName, lastName, email, phone: phone?.substring(0, 4) + '***' });
+
     // Validate input
     if (!firstName || !lastName || !email || !phone) {
+      console.log("Missing fields");
       return new Response(
         JSON.stringify({ error: "All fields are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }

@@ -47,18 +47,25 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      const { error } = await supabase
-        .from('call_requests')
-        .insert({
-          first_name: validData.firstName,
-          last_name: validData.lastName,
+      // Use edge function which bypasses RLS with service role key
+      const { data, error } = await supabase.functions.invoke('submit-call-request', {
+        body: {
+          firstName: validData.firstName,
+          lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        });
+        },
+      });
 
       if (error) {
-        console.error('Database error:', error);
+        console.error('Submission error:', error);
         toast.error('Failed to submit. Please try again.');
+        return;
+      }
+      
+      if (data?.error) {
+        console.error('Server error:', data.error);
+        toast.error(data.error);
         return;
       }
 

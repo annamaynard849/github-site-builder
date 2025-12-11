@@ -46,34 +46,36 @@ export const PublicLandingPage = () => {
     
     try {
       const validData = validation.data;
+      console.log('Submitting form data:', validData);
       
-      // Use direct fetch to edge function which bypasses RLS with service role key
-      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-        },
-        body: JSON.stringify({
+      // Use supabase.functions.invoke which handles CORS properly
+      const { data, error } = await supabase.functions.invoke('submit-call-request', {
+        body: {
           firstName: validData.firstName,
           lastName: validData.lastName,
           email: validData.email.toLowerCase(),
           phone: validData.phone,
-        }),
+        },
       });
 
-      const data = await response.json();
+      console.log('Response:', { data, error });
 
-      if (!response.ok || data.error) {
-        console.error('Submission error:', data.error || response.statusText);
-        toast.error(data.error || 'Failed to submit. Please try again.');
+      if (error) {
+        console.error('Invoke error:', error);
+        toast.error('Failed to submit. Please try again.');
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Server error:', data.error);
+        toast.error(data.error);
         return;
       }
 
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Network error:', error);
+      console.error('Caught error:', error?.message, error);
       toast.error('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);

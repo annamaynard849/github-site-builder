@@ -9,6 +9,38 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// In-memory rate limiting (per IP, resets on function cold start)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = { maxRequests: 5, windowMs: 15 * 60 * 1000 }; // 5 requests per 15 minutes
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+
+  if (!record || now > record.resetTime) {
+    rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_LIMIT.windowMs });
+    return false;
+  }
+
+  if (record.count >= RATE_LIMIT.maxRequests) {
+    return true;
+  }
+
+  record.count++;
+  return false;
+}
+
+// Email validation
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+}
+
+// Name validation
+function isValidName(name: string): boolean {
+  return name.length >= 1 && name.length <= 100 && !/[<>]/.test(name);
+}
+
 interface WaitlistConfirmationRequest {
   email: string;
   firstName: string;
@@ -21,13 +53,64 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Rate limiting check
+  const clientIP = req.headers.get('x-forwarded-for') || 
+                   req.headers.get('cf-connecting-ip') || 
+                   'unknown';
+  
+  if (isRateLimited(clientIP)) {
+    console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+    return new Response(
+      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+      {
+        status: 429,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  }
+
   console.log("send-waitlist-confirmation function called");
-  console.log("Request method:", req.method);
 
   try {
-    const { email, firstName, lastName }: WaitlistConfirmationRequest = await req.json();
+    const body = await req.json();
+    const { email, firstName, lastName } = body as WaitlistConfirmationRequest;
 
-    console.log("Sending waitlist confirmation to:", email);
+    // Input validation
+    if (!email || !firstName || !lastName) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields' }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    if (!isValidEmail(email)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid email address' }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    if (!isValidName(firstName) || !isValidName(lastName)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid name format' }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Sanitize inputs
+    const sanitizedFirstName = firstName.trim().slice(0, 100);
+    const sanitizedEmail = email.trim().toLowerCase();
+
+    console.log("Sending waitlist confirmation to:", sanitizedEmail);
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
@@ -37,7 +120,7 @@ const handler = async (req: Request): Promise<Response> => {
         </h1>
         
         <p style="font-size: 16px; line-height: 1.6; color: #555;">
-          Hello ${firstName},
+          Hello ${sanitizedFirstName},
         </p>
         
         <p style="font-size: 16px; line-height: 1.6; color: #555;">
@@ -77,7 +160,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Honorly Team <onboarding@resend.dev>",
-      to: [email],
+      to: [sanitizedEmail],
       subject: "Welcome to the Honorly Waitlist!",
       html: htmlContent,
     });

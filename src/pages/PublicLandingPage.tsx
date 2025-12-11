@@ -7,6 +7,15 @@ import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+// Contact form validation schema
+const contactSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(100, "First name too long"),
+  lastName: z.string().trim().min(1, "Last name is required").max(100, "Last name too long"),
+  email: z.string().trim().email("Please enter a valid email").max(255, "Email too long"),
+  phone: z.string().trim().min(10, "Phone number too short").max(20, "Phone number too long").regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number"),
+});
 
 export const PublicLandingPage = () => {
   const [formData, setFormData] = useState({
@@ -25,35 +34,31 @@ export const PublicLandingPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
-      toast.error('Please fill in all required fields');
+    // Validate input using zod schema
+    const validation = contactSchema.safeParse(formData);
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast.error(firstError.message);
       return;
     }
-
+    
     setIsSubmitting(true);
     
     try {
-      // Use direct fetch to Supabase REST API
-      const response = await fetch('https://kpspzoooanlfpiuusian.supabase.co/rest/v1/call_requests', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-          first_name: formData.firstName.trim(),
-          last_name: formData.lastName.trim(),
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-        }),
-      });
+      const validData = validation.data;
+      
+      const { error } = await supabase
+        .from('call_requests')
+        .insert({
+          first_name: validData.firstName,
+          last_name: validData.lastName,
+          email: validData.email.toLowerCase(),
+          phone: validData.phone,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('API error:', errorData);
-        toast.error(errorData.message || 'Failed to submit. Please try again.');
+      if (error) {
+        console.error('Database error:', error);
+        toast.error('Failed to submit. Please try again.');
         return;
       }
 

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { Footer } from '@/components/Footer';
+import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 
 // Contact form validation schema
@@ -46,36 +47,33 @@ export const PublicLandingPage = () => {
     try {
       const validData = validation.data;
       
-      // Use direct fetch for more reliable CORS handling
-      const response = await fetch(
-        'https://kpspzoooanlfpiuusian.supabase.co/functions/v1/submit-call-request',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtwc3B6b29vYW5sZnBpdXVzaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzgyOTMsImV4cCI6MjA4MDk1NDI5M30.8OpZx3LsxgkgusIIcqL-L7KKAq6DNnVBqB5vC8zEdqA',
-          },
-          body: JSON.stringify({
-            firstName: validData.firstName,
-            lastName: validData.lastName,
-            email: validData.email.toLowerCase(),
-            phone: validData.phone,
-          }),
-        }
-      );
+      const { data, error } = await supabase.functions.invoke('submit-call-request', {
+        body: {
+          firstName: validData.firstName,
+          lastName: validData.lastName,
+          email: validData.email.toLowerCase(),
+          phone: validData.phone,
+        },
+      });
 
-      const data = await response.json();
+      // Check for FunctionsHttpError, FunctionsRelayError, or FunctionsFetchError
+      if (error) {
+        console.error('Function invoke error:', error.name, error.message);
+        toast.error('Failed to submit. Please try again.');
+        return;
+      }
 
-      if (!response.ok || data?.error) {
-        console.error('Submit error:', data);
-        toast.error(data?.error || 'Failed to submit. Please try again.');
+      // Check for application-level error in response
+      if (data?.error) {
+        console.error('Application error:', data.error);
+        toast.error(data.error);
         return;
       }
 
       toast.success("We'll be in touch within 24 hours.");
       setFormData({ firstName: '', lastName: '', email: '', phone: '' });
     } catch (error: any) {
-      console.error('Submit error:', error);
+      console.error('Unexpected error:', error?.message || error);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);

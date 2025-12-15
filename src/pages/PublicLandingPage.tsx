@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Star, Check, ArrowDown, Shield, Lock, Eye } from 'lucide-react';
+import { Star, Check, ArrowDown } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
@@ -485,42 +485,6 @@ export const PublicLandingPage = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Security Section */}
-      <section className="px-6 md:px-12 py-24 md:py-32">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4">Security</p>
-          <h2 className="text-3xl md:text-4xl font-playfair text-foreground mb-16">
-            How we protect your data
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="space-y-4">
-              <Shield className="w-6 h-6 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">SOC 2 Compliant</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                We meet the highest industry standards for security, availability, and confidentiality of your data.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <Eye className="w-6 h-6 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">Bank-Level Encryption</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                All data is protected with AES-256 encryption, the same standard used by major financial institutions.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <Lock className="w-6 h-6 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">Your Data Stays Yours</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                We never sell or share your personal information. Your family's documents are accessed only by your Care Team.
-              </p>
-            </div>
           </div>
         </div>
       </section>

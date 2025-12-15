@@ -101,13 +101,12 @@ export default function FAQPage() {
               <p className="text-lg text-muted-foreground mb-6">
                 Our Care Team is here to help you navigate this journey.
               </p>
-              <Link 
-                to="/#contact-form" 
-                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
+              <a 
+                href="mailto:hello@honorly.com" 
+                className="text-primary hover:text-primary/80 font-medium transition-colors"
               >
-                Contact us for more information
-                <ArrowLeft className="w-4 h-4 rotate-180" />
-              </Link>
+                hello@honorly.com
+              </a>
             </div>
           </div>
         </div>

@@ -43,55 +43,72 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      {/* Sticky Header - Matching landing page */}
+      <header className="px-6 py-4 md:px-12 fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <span className="text-sm">Back</span>
           </Link>
-          <Link to="/" className="font-playfair text-xl font-semibold text-foreground">
-            HONORLY
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-1 h-5 md:h-6 bg-primary rounded-full"></div>
+            <span className="text-xl md:text-2xl font-playfair font-semibold tracking-[0.15em] text-foreground uppercase">Honorly</span>
           </Link>
           <div className="w-16" />
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <div className="text-center mb-12">
-            <h1 className="font-playfair text-4xl md:text-5xl font-semibold text-foreground mb-4">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Find answers to common questions about Honorly
-            </p>
-          </div>
+      <main className="pt-32 pb-24 md:pb-32">
+        <div className="px-6 md:px-12">
+          <div className="max-w-5xl mx-auto">
+            {/* Section Header - Editorial style matching landing page */}
+            <div className="mb-16">
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4">
+                Questions & Answers
+              </p>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-foreground leading-tight mb-6">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground/80 max-w-2xl leading-relaxed font-light">
+                Find answers to common questions about how Honorly supports families through loss.
+              </p>
+            </div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left text-foreground hover:no-underline">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            {/* FAQ Accordion */}
+            <Accordion type="single" collapsible className="w-full max-w-3xl">
+              {faqs.map((faq, index) => (
+                <AccordionItem 
+                  key={index} 
+                  value={`item-${index}`}
+                  className="border-b border-border/50 py-2"
+                >
+                  <AccordionTrigger className="text-left text-foreground hover:no-underline text-lg md:text-xl font-medium py-6">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-base leading-relaxed pb-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
 
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">
-              Still have questions?
-            </p>
-            <Link 
-              to="/#contact" 
-              className="text-primary hover:underline font-medium"
-            >
-              Contact us for more information
-            </Link>
+            {/* CTA Section */}
+            <div className="mt-20 pt-12 border-t border-border/50">
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4">
+                Still have questions?
+              </p>
+              <p className="text-lg text-muted-foreground mb-6">
+                Our Care Team is here to help you navigate this journey.
+              </p>
+              <Link 
+                to="/#contact-form" 
+                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
+              >
+                Contact us for more information
+                <ArrowLeft className="w-4 h-4 rotate-180" />
+              </Link>
+            </div>
           </div>
         </div>
       </main>

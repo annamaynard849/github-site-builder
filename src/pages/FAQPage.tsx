@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Footer } from '@/components/Footer';
 import {
   Accordion,
   AccordionContent,
@@ -44,59 +43,59 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="px-6 py-4 md:px-12 fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50">
+        <div className="max-w-4xl mx-auto flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <span className="text-sm">Back</span>
           </Link>
-          <Link to="/" className="font-playfair text-xl font-semibold text-foreground">
-            HONORLY
-          </Link>
-          <div className="w-16" />
+          <span className="text-xl font-playfair font-semibold tracking-[0.1em] text-foreground uppercase">Honorly</span>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <div className="text-center mb-12">
-            <h1 className="font-playfair text-4xl md:text-5xl font-semibold text-foreground mb-4">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Find answers to common questions about Honorly
-            </p>
-          </div>
+      {/* Content */}
+      <main className="px-6 md:px-12 pt-32 pb-20">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-playfair text-foreground mb-4">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-muted-foreground mb-12">
+            Find answers to common questions about Honorly
+          </p>
 
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left text-foreground hover:no-underline">
+              <AccordionItem key={index} value={`item-${index}`} className="border-border">
+                <AccordionTrigger className="text-left text-foreground hover:no-underline text-lg">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="text-muted-foreground leading-relaxed">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
 
-          <div className="mt-12 text-center">
+          <div className="mt-16 pt-8 border-t border-border">
             <p className="text-muted-foreground mb-4">
               Still have questions?
             </p>
-            <Link 
-              to="/#contact" 
-              className="text-primary hover:underline font-medium"
-            >
-              Contact us for more information
-            </Link>
+            <p className="text-muted-foreground">
+              Email: <a href="mailto:hello@honorly.com" className="text-primary hover:underline">hello@honorly.com</a><br />
+              Phone: <a href="tel:+16467594118" className="text-primary hover:underline">(646) 759-4118</a>
+            </p>
           </div>
         </div>
       </main>
 
-      <Footer />
+      {/* Footer */}
+      <footer className="px-6 md:px-12 py-8 border-t border-border">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Honorly. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { PublicLandingPage } from "./pages/PublicLandingPage";
 import { TermsOfService } from "./pages/TermsOfService";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { CareersPage } from "./pages/CareersPage";
+import FAQPage from "./pages/FAQPage";
 import { AboutPage } from "./pages/AboutPage";
 import PreviewPage from "./pages/PreviewPage";
 import Index from "./pages/Index";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/faq" element={<FAQPage />} />
             <Route path="/memorial/:slug" element={<MemorialPage />} />
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
             

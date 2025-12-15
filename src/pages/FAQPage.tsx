@@ -32,7 +32,7 @@ const faqs = [
   },
   {
     question: "Why would I need Honorly if the estate seems simple?",
-    answer: "Even \"simple\" estates involve dozens of account closures, notifications, and forms. Every institution has its own process. Honorly uses AI to streamline it all, saving families time, stress, and money."
+    answer: "Even \"simple\" estates involve dozens of account closures, notifications, and forms. Every institution has its own process. Honorly streamlines it all, saving families time, stress, and money."
   }
 ];
 

@@ -11,36 +11,28 @@ import {
 
 const faqs = [
   {
-    question: "What is Honorly?",
-    answer: "Honorly is a compassionate platform designed to help families navigate the difficult tasks that follow the loss of a loved one, or to plan ahead for end-of-life matters. We provide guided support, task management, and resources to ease the burden during challenging times."
+    question: "Do families really need this type of support?",
+    answer: "Yes. Even with plans in place, most families face 70–120 accounts to close and 570 hours of work after a death. Honorly exists because legal documents don't handle the real-world tasks that follow. In the US alone, a massive $84 trillion is set to transfer between generations over the next 25 years. As 70 million baby boomers pass down assets, families will increasingly need help navigating the administrative and financial complexity."
   },
   {
-    question: "How does Honorly help after losing a loved one?",
-    answer: "After a loss, there are many tasks to manage—from legal and financial matters to memorial planning. Honorly provides a personalized roadmap of tasks, connects you with support resources, and helps you coordinate with family members so nothing falls through the cracks."
+    question: "If we already have an estate attorney, isn't everything taken care of?",
+    answer: "Not quite. Attorneys draft documents — they don't close accounts, notify institutions, gather financial records, or manage dozens of administrative tasks. Honorly handles the execution so nothing stalls or slips through the cracks."
   },
   {
-    question: "Can I use Honorly to plan ahead?",
-    answer: "Yes! Our 'Planning Ahead' path allows you to organize important information, document your wishes, and prepare resources for your loved ones, reducing their burden when the time comes."
+    question: "Does Honorly replace an estate attorney?",
+    answer: "No. Estate attorneys handle the legal requirements of the estate, but they typically don't manage the follow-through — things like closing accounts, notifying institutions, gathering documents, or coordinating logistics. Honorly steps in to handle that administrative workload, taking the burden off of families."
   },
   {
-    question: "Is my information secure?",
-    answer: "Absolutely. We take privacy and security seriously. Your data is encrypted, and we never share your personal information with third parties. You control who has access to your information."
+    question: "What does Honorly do that a will or trust doesn't?",
+    answer: "A will gives instructions. Honorly carries them out — from preparing paperwork to coordinating probate steps to closing accounts — so families aren't left doing it alone."
   },
   {
-    question: "Can I invite family members to help?",
-    answer: "Yes, Honorly supports collaboration. You can invite trusted family members or friends to help manage tasks, share updates, and coordinate efforts together."
+    question: "How can you close accounts for my loved one if you are not the executor?",
+    answer: "We act only with a written authorization from the court-appointed executor or trustee. Once they sign a Letter of Authority, Honorly can handle account closures and documentation on their behalf while they retain full decision-making control."
   },
   {
-    question: "How much does Honorly cost?",
-    answer: "We offer different plans to meet your needs. Contact us to learn more about our pricing options and find the right fit for your situation."
-  },
-  {
-    question: "What kind of support do you offer?",
-    answer: "We provide both digital resources and human support. Our platform includes grief support resources, and you can request a call with our team for personalized guidance."
-  },
-  {
-    question: "How do I get started?",
-    answer: "Simply create an account and choose your path—whether you're dealing with a recent loss or planning ahead. Our onboarding process will guide you through setting up your personalized experience."
+    question: "Why would I need Honorly if the estate seems simple?",
+    answer: "Even \"simple\" estates involve dozens of account closures, notifications, and forms. Every institution has its own process. Honorly uses AI to streamline it all, saving families time, stress, and money."
   }
 ];
 

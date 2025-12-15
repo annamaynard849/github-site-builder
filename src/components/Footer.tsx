@@ -17,7 +17,6 @@ export const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-foreground underline underline-offset-4">Company</h4>
             <ul className="space-y-3">
-              <li><Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link></li>
               <li><Link to="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link></li>
               <li><Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link></li>
               <li><Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>

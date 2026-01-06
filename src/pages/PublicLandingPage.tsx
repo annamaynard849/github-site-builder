@@ -116,9 +116,9 @@ export const PublicLandingPage = () => {
       effort: '40 - 100 hours saved'
     },
     { 
-      title: 'Memorial Planning', 
-      desc: 'Obituary drafts, tribute pages, and photo organization',
-      examples: ['Obituary drafts', 'Tribute websites', 'Photo galleries', 'Service planning'],
+      title: 'Funeral Home Support', 
+      desc: 'Help finding and working with the right funeral home for your family',
+      examples: ['Find funeral homes', 'Compare pricing', 'Arrange services', 'Coordinate logistics'],
       effort: '20 - 50 hours saved'
     },
     { 

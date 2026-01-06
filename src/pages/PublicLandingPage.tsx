@@ -118,7 +118,7 @@ export const PublicLandingPage = () => {
     { 
       title: 'Funeral Home Support', 
       desc: 'Help finding and working with the right funeral home for your family',
-      examples: ['Find funeral homes', 'Compare pricing', 'Arrange services', 'Coordinate logistics'],
+      examples: ['Find funeral homes', 'Compare pricing', 'Obituary writing', 'Order flowers', 'Print programs', 'Arrange services'],
       effort: '20 - 50 hours saved'
     },
     { 

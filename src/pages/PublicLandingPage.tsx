@@ -185,6 +185,14 @@ export const PublicLandingPage = () => {
             >
               (646) 759-4118
             </a>
+            <Link to="/auth">
+              <Button 
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground rounded-full px-4"
+              >
+                Sign In
+              </Button>
+            </Link>
             <Button 
               onClick={scrollToForm}
               className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6"

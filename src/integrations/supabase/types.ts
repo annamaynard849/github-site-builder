@@ -49,6 +49,7 @@ export type Database = {
           created_at: string
           id: string
           loved_one_id: string | null
+          preplan_case_id: string | null
           status: string
           type: string
           updated_at: string
@@ -58,6 +59,7 @@ export type Database = {
           created_at?: string
           id?: string
           loved_one_id?: string | null
+          preplan_case_id?: string | null
           status?: string
           type: string
           updated_at?: string
@@ -67,6 +69,7 @@ export type Database = {
           created_at?: string
           id?: string
           loved_one_id?: string | null
+          preplan_case_id?: string | null
           status?: string
           type?: string
           updated_at?: string
@@ -80,47 +83,67 @@ export type Database = {
             referencedRelation: "loved_ones"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cases_preplan_case_id_fkey"
+            columns: ["preplan_case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
         ]
       }
       loved_ones: {
         Row: {
+          admin_user_id: string | null
           created_at: string
           date_of_birth: string | null
           date_of_death: string | null
+          first_name: string | null
           id: string
-          name: string
+          last_name: string | null
+          name: string | null
           photo_url: string | null
           relationship: string | null
+          relationship_to_user: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
+          admin_user_id?: string | null
           created_at?: string
           date_of_birth?: string | null
           date_of_death?: string | null
+          first_name?: string | null
           id?: string
-          name: string
+          last_name?: string | null
+          name?: string | null
           photo_url?: string | null
           relationship?: string | null
+          relationship_to_user?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
+          admin_user_id?: string | null
           created_at?: string
           date_of_birth?: string | null
           date_of_death?: string | null
+          first_name?: string | null
           id?: string
-          name?: string
+          last_name?: string | null
+          name?: string | null
           photo_url?: string | null
           relationship?: string | null
+          relationship_to_user?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
       onboarding_answers: {
         Row: {
           answers_json: Json
+          completion_pct: number
           created_at: string
           id: string
           loved_one_id: string | null
@@ -129,6 +152,7 @@ export type Database = {
         }
         Insert: {
           answers_json?: Json
+          completion_pct?: number
           created_at?: string
           id?: string
           loved_one_id?: string | null
@@ -137,6 +161,7 @@ export type Database = {
         }
         Update: {
           answers_json?: Json
+          completion_pct?: number
           created_at?: string
           id?: string
           loved_one_id?: string | null
@@ -185,12 +210,15 @@ export type Database = {
       }
       tasks: {
         Row: {
+          assigned_to_user_id: string | null
           case_id: string | null
           category: string | null
           created_at: string
+          created_by_user_id: string | null
           description: string | null
           due_date: string | null
           id: string
+          is_custom: boolean
           is_personalized: boolean | null
           loved_one_id: string | null
           priority: string | null
@@ -200,12 +228,15 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          assigned_to_user_id?: string | null
           case_id?: string | null
           category?: string | null
           created_at?: string
+          created_by_user_id?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
+          is_custom?: boolean
           is_personalized?: boolean | null
           loved_one_id?: string | null
           priority?: string | null
@@ -215,12 +246,15 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          assigned_to_user_id?: string | null
           case_id?: string | null
           category?: string | null
           created_at?: string
+          created_by_user_id?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
+          is_custom?: boolean
           is_personalized?: boolean | null
           loved_one_id?: string | null
           priority?: string | null
@@ -231,11 +265,25 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "tasks_assigned_to_user_id_fkey"
+            columns: ["assigned_to_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "tasks_case_id_fkey"
             columns: ["case_id"]
             isOneToOne: false
             referencedRelation: "cases"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_created_by_user_id_fkey"
+            columns: ["created_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "tasks_loved_one_id_fkey"

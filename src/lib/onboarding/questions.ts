@@ -40,7 +40,7 @@ const recentLossQuestions: Question[] = [
     id: 'date_of_death', 
     label: 'When did they pass away?', 
     type: 'date', 
-    required: false 
+    required: true 
   },
   { 
     id: 'jurisdiction', 

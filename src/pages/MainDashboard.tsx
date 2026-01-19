@@ -432,20 +432,6 @@ const [tasks, setTasks] = useState<Task[]>([]);
                 </CardContent>
               </Card>
 
-              {showProfile && lovedOne && (
-                <div className="mt-6">
-                  <LovedOneDetails
-                    lovedOneId={lovedOne.id}
-                    lovedOne={{
-                      first_name: lovedOne.first_name,
-                      last_name: lovedOne.last_name,
-                      photo_url: lovedOne.photo_url,
-                      relationship_to_user: lovedOne.relationship_to_user,
-                      date_of_death: lovedOne.date_of_death,
-                    }}
-                  />
-                </div>
-              )}
 
               {/* Today's Focus - Just One Thing */}
               {todayTasks.length > 0 && (

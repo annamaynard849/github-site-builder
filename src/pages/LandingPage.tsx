@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, ArrowRight, Shield, Clock, Users, Star, CheckCircle, LogOut } from 'lucide-react';
+import { Heart, ArrowRight, Shield, Clock, Users, Star, CheckCircle, LogOut, Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "@/hooks/useAuth";
 
 export const LandingPage = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -30,6 +32,15 @@ export const LandingPage = () => {
             </div>
           </div>
           
+          {/* Mobile menu button */}
+          <button 
+            className="md:hidden p-2 text-foreground"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+          
+          {/* Desktop navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105">
               About
@@ -62,7 +73,7 @@ export const LandingPage = () => {
                     Sign In
                   </Button>
                 </Link>
-                <Link to={user ? "/dashboard" : "/auth"}>
+                <Link to="/auth">
                   <Button size="sm" className="rounded-full px-6 hover:scale-105 transition-all duration-300 bg-gradient-to-r from-primary to-primary/80">
                     Get Started
                   </Button>
@@ -71,6 +82,69 @@ export const LandingPage = () => {
             )}
           </nav>
         </div>
+        
+        {/* Mobile navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-6 pb-4 border-t border-border/20 pt-6">
+            <nav className="flex flex-col gap-4">
+              <a 
+                href="#about" 
+                className="text-foreground hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About
+              </a>
+              <a 
+                href="#how-it-works" 
+                className="text-foreground hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                How it works
+              </a>
+              <a 
+                href="#contact" 
+                className="text-foreground hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </a>
+              
+              <div className="pt-4 border-t border-border/20 flex flex-col gap-3">
+                {user ? (
+                  <>
+                    <span className="text-sm text-muted-foreground">
+                      Welcome back, {user.user_metadata?.first_name || user.email}
+                    </span>
+                    <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full rounded-full">Continue</Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => { signOut(); setMobileMenuOpen(false); }}
+                      className="w-full rounded-full"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full rounded-full">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full rounded-full bg-gradient-to-r from-primary to-primary/80">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}

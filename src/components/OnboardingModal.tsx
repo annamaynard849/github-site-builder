@@ -420,9 +420,16 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="space-y-4"
             >
-              <h3 className="text-base font-medium text-foreground">
-                {currentQuestion.label}
-              </h3>
+              <div>
+                <h3 className="text-base font-medium text-foreground">
+                  {currentQuestion.label}
+                </h3>
+                {currentQuestion.subtitle && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {currentQuestion.subtitle}
+                  </p>
+                )}
+              </div>
               {renderQuestion()}
             </motion.div>
           </AnimatePresence>

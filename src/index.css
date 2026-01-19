@@ -142,4 +142,9 @@ All colors MUST be HSL.
   .card-memory-glow {
     box-shadow: 0 4px 20px hsl(215 25% 85% / 0.4);
   }
+
+  /* Playfair Display for headings */
+  .font-playfair {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
 }

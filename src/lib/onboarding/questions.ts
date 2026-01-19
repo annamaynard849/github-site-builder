@@ -37,12 +37,6 @@ const recentLossQuestions: Question[] = [
     required: true 
   },
   { 
-    id: 'photo', 
-    label: 'Would you like to upload a photo? (optional)', 
-    type: 'photo_upload',
-    required: false 
-  },
-  { 
     id: 'date_of_death', 
     label: 'When did they pass away?', 
     type: 'date', 

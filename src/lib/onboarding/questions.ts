@@ -28,7 +28,7 @@ const recentLossQuestions: Question[] = [
     label: 'Who did you lose?', 
     type: 'single_select', 
     options: ['My parent', 'My grandparent', 'My spouse or partner', 'My child', 'My sibling', 'My friend', 'Other'], 
-    required: false 
+    required: true 
   },
   { 
     id: 'loved_one_name', 
@@ -48,7 +48,7 @@ const recentLossQuestions: Question[] = [
     label: 'Where did your loved one pass away?', 
     type: 'location', 
     fields: ['state', 'county'], 
-    required: false 
+    required: true 
   },
   { 
     id: 'care_status', 
@@ -56,21 +56,21 @@ const recentLossQuestions: Question[] = [
     subtitle: 'For example, transferred to a funeral home, mortuary, or other care provider',
     type: 'single_select', 
     options: ['Yes', 'Not yet', "I'm not sure"], 
-    required: false 
+    required: true 
   },
   { 
     id: 'dependents_status', 
     label: 'Was your loved one caring for anyone — like children, pets, or others?', 
     type: 'single_select', 
     options: ['Yes', 'No', 'Not sure yet'], 
-    required: false 
+    required: true 
   },
   { 
     id: 'notifications_status', 
     label: 'Have you been able to let close family or friends know yet?', 
     type: 'single_select', 
     options: ['Yes', 'Not yet'], 
-    required: false 
+    required: true 
   },
 ];
 
@@ -81,21 +81,21 @@ const planningAheadQuestions: Question[] = [
     label: 'What prompted you to start planning?', 
     type: 'single_select', 
     options: ['Health concerns', 'Age/life stage', 'Family request', 'Peace of mind', 'Other'], 
-    required: false 
+    required: true 
   },
   { 
     id: 'healthcare_directive', 
     label: 'Do you have an advance healthcare directive?', 
     type: 'single_select', 
     options: ['Yes', 'No', 'Not sure what that is'], 
-    required: false 
+    required: true 
   },
   { 
     id: 'will_status', 
     label: 'Do you have a will or estate plan?', 
     type: 'single_select', 
     options: ['Yes', 'No', 'In progress'], 
-    required: false 
+    required: true 
   },
 ];
 

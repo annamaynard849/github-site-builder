@@ -42,6 +42,24 @@ export default function HomeDashboard() {
     try {
       setLoading(true);
 
+      // Check if user has any cases (primary indicator of completed onboarding)
+      const { data: userCases, error: casesError } = await supabase
+        .from('cases')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+
+      if (casesError) throw casesError;
+
+      // If user has cases, they've completed onboarding - redirect to dashboard
+      if (userCases && userCases.length > 0) {
+        setHasLovedOnes(true);
+        if (searchParams.get('showOnboarding') !== 'preplan') {
+          navigate(`/cases/${userCases[0].id}`, { replace: true });
+        }
+        return;
+      }
+
       // Check if user owns any loved ones
       const { data: ownedLovedOnes, error: ownedError } = await supabase
         .from('loved_ones')
@@ -63,7 +81,7 @@ export default function HomeDashboard() {
 
       setHasLovedOnes(hasAnyLovedOnes);
 
-      // If user has loved ones, redirect to main dashboard unless we're explicitly opening onboarding
+      // If user has loved ones but no cases, still redirect to dashboard
       if (hasAnyLovedOnes && searchParams.get('showOnboarding') !== 'preplan') {
         navigate('/dashboard', { replace: true });
       }

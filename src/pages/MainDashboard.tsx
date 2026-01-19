@@ -287,19 +287,9 @@ const [tasks, setTasks] = useState<Task[]>([]);
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => navigate('/dashboard')}
-                className="mr-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-2xl font-playfair font-normal text-foreground tracking-widest">HONORLY</span>
-            </div>
+            <span className="text-xl font-playfair font-normal text-foreground tracking-widest">HONORLY</span>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}>
                 <Settings className="h-4 w-4" />
@@ -312,252 +302,124 @@ const [tasks, setTasks] = useState<Task[]>([]);
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto">
-        <main className="p-6 md:p-8 lg:p-10">
-          <div className="max-w-5xl mx-auto space-y-6">
-            <>
-              {/* Hero Section with Photo */}
-              <Card className="border-border/50 overflow-hidden bg-gradient-to-br from-card to-card/50">
-                <CardContent className="p-8 md:p-10">
-                  <div className="flex flex-col md:flex-row items-start gap-8">
-                    {/* Photo */}
-                    <div className="shrink-0">
-                      <Avatar className="h-32 w-32 md:h-40 md:w-40 ring-4 ring-background shadow-lg">
-                        <AvatarImage src={lovedOne.photo_url || ''} alt={`${lovedOne.first_name} ${lovedOne.last_name}`} />
-                        <AvatarFallback className="text-3xl font-playfair bg-primary/10 text-primary">
-                          {lovedOne.first_name?.[0]}{lovedOne.last_name?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
+      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        {/* Simple Welcome */}
+        <div className="flex items-center gap-5">
+          <Avatar className="h-16 w-16 ring-2 ring-border">
+            <AvatarImage src={lovedOne.photo_url || ''} alt={lovedOne.first_name} />
+            <AvatarFallback className="text-lg font-playfair bg-primary/10 text-primary">
+              {lovedOne.first_name?.[0]}{lovedOne.last_name?.[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-2xl font-playfair font-normal text-foreground">
+              Honoring {lovedOne.first_name}
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Take things one step at a time. We're here to help.
+            </p>
+          </div>
+        </div>
 
-                    {/* Content */}
-                    <div className="flex-1 space-y-4">
-                      <div>
-                        <h1 className="text-3xl md:text-4xl font-playfair font-normal text-foreground mb-2">
-                          Honoring {lovedOne.first_name}
-                        </h1>
-                        <p className="text-lg text-muted-foreground font-light">
-                          {lovedOne.date_of_birth && lovedOne.date_of_death && (
-                            <span className="block mb-2">
-                              {new Date(lovedOne.date_of_birth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {new Date(lovedOne.date_of_death).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                            </span>
-                          )}
-                          You don't have to navigate this journey alone. We're here to guide you through each step, at your own pace.
-                        </p>
-                      </div>
-
-                      <div className="rounded-lg p-4 bg-amber-500/5 border border-amber-500/20">
-                        <div className="flex items-start gap-3">
-                          <Moon className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
-                          <p className="text-sm text-foreground font-light">
-                            Take your time. There's no rush. Everything here will be waiting when you're ready.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        <Button 
-                          size="lg"
-                          className="rounded-full"
-                          onClick={() => {
-                            const nextTask = todayTasks[0];
-                            if (nextTask) {
-                              navigate(`/task/${nextTask.id}`);
-                            }
-                          }}
-                        >
-                          Show me what's next
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                        <InviteSupportMember
-                          lovedOneId={lovedOne.id}
-                          lovedOneName={`${lovedOne.first_name} ${lovedOne.last_name}`}
-                          trigger={
-                            <Button 
-                              size="lg"
-                              variant="outline"
-                              className="rounded-full"
-                            >
-                              <Share2 className="h-4 w-4 mr-2" />
-                              Invite support
-                            </Button>
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* How We'll Help You Section */}
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-playfair font-normal">How we'll support you</CardTitle>
-                  <p className="text-sm text-muted-foreground font-light mt-1">
-                    We've organized everything into clear areas, so you know where to focus when you're ready
+        {/* Today's Focus - Primary Action */}
+        {todayTasks.length > 0 && (
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <Checkbox
+                  checked={todayTasks[0].status === 'completed'}
+                  onCheckedChange={() => handleTaskToggle(todayTasks[0].id)}
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                    Next step
                   </p>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="grid gap-3">
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <Heart className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                      <div>
-                        <h4 className="font-medium text-foreground mb-1">Creating a memorial</h4>
-                        <p className="text-sm text-muted-foreground font-light">
-                          A beautiful space to celebrate {lovedOne.first_name}'s life and share memories with others
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <HandHeart className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                      <div>
-                        <h4 className="font-medium text-foreground mb-1">Finding support</h4>
-                        <p className="text-sm text-muted-foreground font-light">
-                          Resources for grief counseling, support groups, and guidance through this difficult time
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <FileText className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                      <div>
-                        <h4 className="font-medium text-foreground mb-1">Handling practical matters</h4>
-                        <p className="text-sm text-muted-foreground font-light">
-                          Step-by-step help with legal documents, financial accounts, and administrative tasks
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-
-              {/* Today's Focus - Just One Thing */}
-              {todayTasks.length > 0 && (
-                <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-transparent">
-                  <CardHeader>
-                    <CardTitle className="text-xl font-playfair font-normal">Today's focus</CardTitle>
-                    <p className="text-sm text-muted-foreground font-light mt-1">
-                      You don't need to do everything at once. Here's one small step you can take when you're ready.
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    {/* Highlight just the first task */}
-                    <div className="bg-card rounded-lg p-5 border border-border shadow-sm">
-                      <div className="flex items-start gap-4">
-                        <Checkbox
-                          checked={todayTasks[0].status === 'completed'}
-                          onCheckedChange={() => handleTaskToggle(todayTasks[0].id)}
-                          className="mt-1"
-                        />
-                        <div className="flex-1 space-y-2">
-                          <p className="text-base font-medium text-foreground">
-                            {todayTasks[0].title}
-                          </p>
-                          {todayTasks[0].estimated_time && (
-                            <p className="text-sm text-muted-foreground font-light">
-                              Estimated time: ~{todayTasks[0].estimated_time} minutes
-                            </p>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate(`/task/${todayTasks[0].id}`)}
-                            className="mt-2"
-                          >
-                            Start this task
-                            <ArrowRight className="h-3 w-3 ml-2" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-
+                  <p className="text-base font-medium text-foreground mb-3">
+                    {todayTasks[0].title}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      onClick={() => navigate(`/task/${todayTasks[0].id}`)}
+                    >
+                      Start this
+                      <ArrowRight className="h-3 w-3 ml-2" />
+                    </Button>
                     {todayTasks.length > 1 && (
-                      <div className="mt-4 pt-4 border-t border-border">
-                        <p className="text-sm text-muted-foreground font-light mb-2">
-                          {todayTasks.length - 1} more {todayTasks.length - 1 === 1 ? 'task' : 'tasks'} when you're ready
-                        </p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="font-light"
-                          onClick={() => currentCase && navigate(`/vault/${currentCase.loved_one_id}`)}
-                        >
-                          View all tasks
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Explore Resources */}
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-xl font-playfair font-normal text-foreground mb-1">
-                    When you're ready to explore
-                  </h2>
-                  <p className="text-sm text-muted-foreground font-light">
-                    These are the ways we can help. No pressure — just here when you need them.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  {categories.map((category) => {
-                    const Icon = category.icon;
-                    return (
-                      <div
-                        key={category.id}
-                        className="group flex items-center gap-4 p-4 rounded-lg border border-border/50 hover:border-primary/30 hover:bg-muted/20 transition-all cursor-pointer"
-                        onClick={category.onClick}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => currentCase && navigate(`/vault/${currentCase.loved_one_id}`)}
                       >
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <Icon className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-foreground text-sm mb-0.5">{category.title}</h4>
-                          <p className="text-sm text-muted-foreground font-light">
-                            {category.description}
-                          </p>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
-                      </div>
-                    );
-                  })}
+                        See all {tasks.filter(t => t.status === 'pending').length} tasks
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        )}
 
-              {/* Support Card */}
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card shadow-sm">
-                <CardContent className="p-8">
-                  <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <MessageCircle className="h-7 w-7 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-playfair font-normal text-foreground mb-2">
-                        You don't have to do this alone
-                      </h3>
-                      <p className="text-muted-foreground font-light">
-                        Whether you need someone to talk to, have questions about what to do next, or just need a moment of support — we're here for you, anytime.
-                      </p>
-                    </div>
-                    <Button 
-                      size="lg"
-                      onClick={() => lovedOne && navigate(`/chat/${lovedOne.id}`)}
-                      className="shrink-0"
-                    >
-                      Talk to us
-                      <MessageCircle className="h-4 w-4 ml-2" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
+        {/* Main Areas - Clean List */}
+        <div className="space-y-2">
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide px-1">
+            Areas to explore
+          </h2>
+          
+          {categories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <button
+                key={category.id}
+                className="w-full flex items-center gap-4 p-4 rounded-lg border border-border hover:border-primary/30 hover:bg-muted/30 transition-all text-left group"
+                onClick={category.onClick}
+              >
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                  <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-foreground">{category.title}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-1">{category.description}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Invite Support - Subtle */}
+        <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border">
+          <div className="flex items-center gap-3">
+            <Share2 className="h-5 w-5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              Need help? Invite family or friends to assist.
+            </p>
           </div>
-        </main>
-      </div>
+          <InviteSupportMember
+            lovedOneId={lovedOne.id}
+            lovedOneName={`${lovedOne.first_name} ${lovedOne.last_name}`}
+            trigger={
+              <Button variant="outline" size="sm">
+                Invite
+              </Button>
+            }
+          />
+        </div>
+
+        {/* Help Link */}
+        <div className="text-center pt-4">
+          <Button
+            variant="ghost"
+            className="text-muted-foreground"
+            onClick={() => lovedOne && navigate(`/chat/${lovedOne.id}`)}
+          >
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Need to talk? We're here for you.
+          </Button>
+        </div>
+      </main>
     </div>
   );
 }

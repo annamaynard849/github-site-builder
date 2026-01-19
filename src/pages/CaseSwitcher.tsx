@@ -155,32 +155,44 @@ export default function CaseSwitcher() {
 
       if (ownedError) throw ownedError;
 
-      // Fetch loved ones where user is a support team member
-      const { data: supportData, error: supportError } = await supabase
-        .from('loved_one_access')
-        .select(`
-          loved_one_id,
-          role,
-          granted_by,
-          loved_ones (
-            id,
-            first_name,
-            last_name,
-            photo_url,
-            date_of_birth,
-            date_of_death,
-            admin_user_id
-          )
-        `)
-        .eq('user_id', user.id);
-
-      if (supportError) throw supportError;
-
       const ownedCases = (ownedCasesData || []) as unknown as CaseWithLovedOne[];
-      const supportAccess = (supportData || []) as unknown as SupportAccessItem[];
+
+      // Always set owned cases even if support-team fetching fails
+      setCases(ownedCases);
+
+      // Fetch loved ones where user is a support team member (optional feature)
+      let supportAccess: SupportAccessItem[] = [];
+      try {
+        const { data: supportData, error: supportError } = await supabase
+          .from('loved_one_access')
+          .select(`
+            loved_one_id,
+            role,
+            granted_by,
+            loved_ones (
+              id,
+              first_name,
+              last_name,
+              photo_url,
+              date_of_birth,
+              date_of_death,
+              admin_user_id
+            )
+          `)
+          .eq('user_id', user.id);
+
+        if (supportError) {
+          // If the table/policies aren't present, don't block owned cases from rendering.
+          console.warn('Support access not available:', supportError);
+        } else {
+          supportAccess = (supportData || []) as unknown as SupportAccessItem[];
+        }
+      } catch (err) {
+        console.warn('Support access not available:', err);
+      }
 
       // Fetch names of people who invited support members
-      const inviterIds = supportAccess.map(s => s.granted_by).filter(Boolean);
+      const inviterIds = supportAccess.map((s) => s.granted_by).filter(Boolean);
       if (inviterIds.length > 0) {
         const { data: inviterProfiles } = await supabase
           .from('profiles')
@@ -188,7 +200,7 @@ export default function CaseSwitcher() {
           .in('user_id', inviterIds);
 
         const namesMap: Record<string, string> = {};
-        inviterProfiles?.forEach(profile => {
+        inviterProfiles?.forEach((profile) => {
           namesMap[profile.user_id] = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
         });
         setInvitedByNames(namesMap);
@@ -203,7 +215,6 @@ export default function CaseSwitcher() {
         setUserType('primary');
       }
 
-      setCases(ownedCases);
       setSupportedLovedOnes(supportAccess);
     } catch (error) {
       console.error('Error fetching cases:', error);

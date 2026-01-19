@@ -13,6 +13,7 @@ export type QuestionType =
 export interface Question {
   id: string;
   label: string;
+  subtitle?: string;
   type: QuestionType;
   options?: string[];
   fields?: string[]; // for location
@@ -51,7 +52,8 @@ const recentLossQuestions: Question[] = [
   },
   { 
     id: 'care_status', 
-    label: 'Has someone helped take your loved one into care yet?', 
+    label: 'Has someone helped take your loved one into care yet?',
+    subtitle: 'For example, transferred to a funeral home, mortuary, or other care provider',
     type: 'single_select', 
     options: ['Yes', 'Not yet', "I'm not sure"], 
     required: false 

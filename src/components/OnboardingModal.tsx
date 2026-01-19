@@ -312,34 +312,37 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
     }
 
     if (currentQuestion.type === 'single_select') {
+      const options = currentQuestion.options || [];
+      const useCompactLayout = options.length > 4;
+      
       return (
-        <div className="space-y-2">
-          {currentQuestion.options?.map((opt, index) => (
+        <div className={`space-y-2 ${useCompactLayout ? 'max-h-[240px] overflow-y-auto pr-2' : ''}`}>
+          {options.map((opt, index) => (
             <motion.button
               key={opt}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: index * 0.03 }}
               onClick={() => handleAnswer(opt)}
-              className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
+              className={`w-full p-3 text-left rounded-lg border transition-all duration-200 ${
                 value === opt 
                   ? 'border-primary bg-primary/5 text-foreground shadow-sm' 
                   : 'border-border hover:border-primary/40 hover:bg-secondary/50 text-foreground'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+              <div className="flex items-center gap-2.5">
+                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
                   value === opt ? 'border-primary bg-primary' : 'border-muted-foreground/40'
                 }`}>
                   {value === opt && (
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-2 h-2 bg-primary-foreground rounded-full"
+                      className="w-1.5 h-1.5 bg-primary-foreground rounded-full"
                     />
                   )}
                 </div>
-                <span className="text-base">{opt}</span>
+                <span className="text-sm">{opt}</span>
               </div>
             </motion.button>
           ))}
@@ -363,30 +366,30 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[540px] p-0 overflow-hidden bg-card">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden bg-card max-h-[90vh]">
         {/* Header with gradient */}
-        <div className="relative px-8 pt-8 pb-6 bg-gradient-to-br from-primary/5 via-secondary/30 to-background">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="relative px-6 pt-6 pb-4 bg-gradient-to-br from-primary/5 via-secondary/30 to-background">
+          <div className="flex items-center gap-2 mb-1">
             {path === 'recent-loss' ? (
-              <Heart className="w-5 h-5 text-primary" />
+              <Heart className="w-4 h-4 text-primary" />
             ) : (
-              <Sparkles className="w-5 h-5 text-primary" />
+              <Sparkles className="w-4 h-4 text-primary" />
             )}
-            <span className="text-sm font-medium text-primary">
+            <span className="text-xs font-medium text-primary">
               {path === 'recent-loss' ? 'Loss Support Setup' : 'Planning Ahead'}
             </span>
           </div>
-          <h2 className="text-2xl font-semibold text-foreground font-playfair">
+          <h2 className="text-xl font-semibold text-foreground font-playfair">
             Let's personalize your experience
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Your answers help us provide the most relevant support.
           </p>
         </div>
 
         {/* Progress bar */}
-        <div className="px-8 py-2">
-          <div className="flex items-center justify-between mb-2">
+        <div className="px-6 py-2">
+          <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-muted-foreground">
               Question {currentStep + 1} of {questions.length}
             </span>
@@ -394,7 +397,7 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
               {Math.round(progress)}% complete
             </span>
           </div>
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-1 bg-muted rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
               initial={{ width: 0 }}
@@ -402,27 +405,10 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
               transition={{ duration: 0.4, ease: 'easeOut' }}
             />
           </div>
-          
-          {/* Step indicators */}
-          <div className="flex justify-between mt-3">
-            {questions.map((_, index) => (
-              <motion.div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index < currentStep 
-                    ? 'bg-primary' 
-                    : index === currentStep 
-                      ? 'bg-primary ring-4 ring-primary/20' 
-                      : 'bg-muted-foreground/30'
-                }`}
-                whileHover={{ scale: 1.2 }}
-              />
-            ))}
-          </div>
         </div>
 
         {/* Question content with animation */}
-        <div className="px-8 py-6 min-h-[280px]">
+        <div className="px-6 py-4 min-h-[220px]">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentStep}
@@ -432,9 +418,9 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
               animate="center"
               exit="exit"
               transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="space-y-5"
+              className="space-y-4"
             >
-              <h3 className="text-lg font-medium text-foreground">
+              <h3 className="text-base font-medium text-foreground">
                 {currentQuestion.label}
               </h3>
               {renderQuestion()}
@@ -443,7 +429,7 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
         </div>
 
         {/* Footer with actions */}
-        <div className="px-8 py-5 bg-muted/30 border-t border-border">
+        <div className="px-6 py-4 bg-muted/30 border-t border-border">
           <div className="flex justify-between items-center">
             <Button
               variant="ghost"

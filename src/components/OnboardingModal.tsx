@@ -369,16 +369,6 @@ export function OnboardingModal({ open, onClose, path, userId, onComplete }: Onb
       <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden bg-card max-h-[90vh]">
         {/* Header with gradient */}
         <div className="relative px-6 pt-6 pb-4 bg-gradient-to-br from-primary/5 via-secondary/30 to-background">
-          <div className="flex items-center gap-2 mb-1">
-            {path === 'recent-loss' ? (
-              <Heart className="w-4 h-4 text-primary" />
-            ) : (
-              <Sparkles className="w-4 h-4 text-primary" />
-            )}
-            <span className="text-xs font-medium text-primary">
-              {path === 'recent-loss' ? 'Loss Support Setup' : 'Planning Ahead'}
-            </span>
-          </div>
           <h2 className="text-xl font-semibold text-foreground font-playfair">
             Let's personalize your experience
           </h2>
